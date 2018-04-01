@@ -1,8 +1,7 @@
 public class TicTacToe {
     private int size;
-    // заменил обьявление констант char на перечисление Mark
     enum Mark {
-        Empty, X, O
+        X, O
     }
     private Mark[][] field;
     TicTacToe(int size) {
@@ -11,176 +10,97 @@ public class TicTacToe {
 
     }
 
-    public static Mark mark = Mark.X;
+    public void addMark(int pointXX,  int pointXY, Mark mark){
 
-    public void addMark(int pointXX,  int pointXY){
-        //проверка на пустоту клетки
-        if(field[pointXX][pointXY] != null){
-            mark = Mark.Empty;
-        }
-
-        //проверка на выход за границу массива
-        if(pointXX >= 3 || pointXY >= 3){
+        //проверка на выход за границы массива
+        if ((pointXX < 0 || pointXX > size - 1) && ((pointXY < 0 || pointXY > size - 1))){
             throw new ArrayIndexOutOfBoundsException();
         }
 
+        //проверка на пустоту клетки
+        if(field[pointXX][pointXY] != null){
+            mark = null;
+        }
+
         //добавление марки
-        switch(mark){
-            case X: field[pointXX][pointXY] = Mark.X;
-                break;
-            case O: field[pointXX][pointXY] = Mark.O;
-                break;
-            case Empty: break;
+        if(mark != null){
+            field[pointXX][pointXY] = mark;
         }
     }
 
     //удаление марки
     public void removeMark(int pointXX, int pointXY){
-        if(pointXX >= 3 || pointXY >= 3){
-            throw new ArrayIndexOutOfBoundsException();
+
+        //проверка на выход за границы массива
+        if ((pointXX < 0 || pointXX > size - 1) && ((pointXY < 0 || pointXY > size - 1))){
+            throw new IndexOutOfBoundsException();
         }
+        //удаление марки
         field[pointXX][pointXY] = null;
     }
 
     //самая длинная горизонтальная
     private int longestHorizontal(){
-        int longestH = 0;
+
         int longestH2 = 0;
-        switch(mark){
-            //для Х
-            case X:
-                for(int row = 0; row < size; row++) {
-                    for (int column = 0; column < size - 1; column++) {
-                        if (field[row][column] == field[row][column + 1] && field[row][column] == Mark.X) {
-                            longestH++;
-                        }
-                    }
-                    longestH2 = Math.max(longestH, longestH2);
+        for(int row = 0; row < size; row++) {
+            int longestH = 0;
+            for (int column = 0; column < size - 1; column++) {
+                if (field[row][column] == field[row][column + 1] && field[row][column] != null) {
+                    longestH++;
+                }
+                else{
                     longestH = 0;
                 }
-                longestH = longestH2 + 1 ;
-                break;
-            //для О
-            case O:
-                for(int row = 0; row < size; row++){
-                    for(int column = 0; column < size - 1; column++){
-                        if(field[row][column] == field[row][column + 1] && field[row][column] == Mark.O){
-                            longestH++;
-                        }
-                    }
-                    longestH2 = Math.max(longestH, longestH2);
-                    longestH = 0;
-                }
-                longestH = longestH2 + 1;
-                break;
-            case Empty:
-                break;
+            }
+            longestH2 = Math.max(longestH, longestH2);
         }
-        return longestH;
+        longestH2 = longestH2 + 1;
+        return longestH2;
     }
 
     //самая длинная вертикальная
-    private int longestVertical(){
-        int longestV = 0;
+    private int longestVertical() {
         int longestV2 = 0;
-        switch(mark){
-            //для Х
-            case X:
-                for(int column = 0; column < size; column++){
-                    for(int row = 0; row < size - 1; row++){
-                        if(field[row][column] == field[row + 1][column] && field[row][column] == Mark.X){
-                            longestV++;
-                        }
-                    }
-                    longestV2 = Math.max(longestV, longestV2);
-                    longestV = 0;
+        for (int column = 0; column < size; column++) {
+            int longestV = 0;
+            for (int row = 0; row < size - 1; row++) {
+                if (field[row][column] == field[row + 1][column] && field[row][column] != null) {
+                    longestV++;
                 }
-                longestV = longestV2 + 1;
-                break;
-            //для О
-            case O:
-                for(int column = 0; column < size; column++){
-                    for(int row = 0; row < size - 1; row++){
-                        if(field[column][row] == field[column][row + 1] && field[row][column] == Mark.O){
-                            longestV++;
-                        }
-                    }
-                    longestV2 = Math.max(longestV, longestV2);
-                    longestV = 0;
-                }
-                longestV = longestV2 + 1;
-                break;
-            case Empty:
-                break;
+            }
+            longestV2 = Math.max(longestV, longestV2);
         }
-        return longestV;
+        longestV2 = longestV2 + 1;
+        return longestV2;
     }
 
     //самая длинная на главной диагонали
-    private int longestMainDiagonal(){
+    private int longestMainDiagonal() {
         int longestMD = 0;
-        switch(mark){
-            //для Х
-            case X:
-                for(int row = 0; row < size - 1; row++){
-                    for(int column = 0; column < size - 1; column++){
-                        if(field[row][column] == field[row + 1][column + 1] && field[row][column] == Mark.X){
-                            longestMD++;
-                        }
-                        row++;
-                    }
-                }
+        int column;
+        for (int row = 0; row < size - 1; row++) {
+            column = row;
+            if (field[row][column] == field[row + 1][column + 1] && field[row][column] != null) {
                 longestMD++;
-                break;
-            //для О
-            case O:
-                for(int row = 0; row < size; row++){
-                    for(int column = 0; column < size; column++){
-                        if(field[row][column] == field[row + 1][column + 1] && field[row][column] == Mark.O){
-                            longestMD++;
-                        }
-                        row++;
-                    }
-                }
-                longestMD++;
-                break;
-            case Empty:
-                break;
+            }
         }
+        longestMD++;
         return longestMD;
     }
 
     //самая длинная на побочной диагонали
     private int longestSecondaryDiagonal(){
         int longestSD = 0;
-        switch(mark){
-            //для Х
-            case X:
-                for(int row = size - 1; row > 0; row--){
-                    for(int column = 0; column < size - 1; column++){
-                        if(field[row][column] == field[row - 1][column + 1] && field[row][column] == Mark.X){
-                            longestSD++;
-                        }
-                        row--;
-                    }
-                }
+        int row;
+        for (int column = 0; column < size - 1; column++) {
+            row = size - column - 1;
+            if (field[row][column] == field[row - 1][column + 1] && field[row][column] != null) {
                 longestSD++;
-                break;
-            //для О
-            case O:
-                for(int row = size - 1; row >= 0; row--){
-                    for(int column = 0; column < size; column++){
-                        if(field[row][column] == field[row - 1][column + 1] && field[row][column] == Mark.O){
-                            longestSD++;
-                        }
-                        row--;
-                    }
-                }
-                longestSD++;
-                break;
-            case Empty:
-                break;
+            }
+
         }
+                longestSD++;
         return longestSD;
     }
 
@@ -191,7 +111,8 @@ public class TicTacToe {
                 longestHorizontal());
     }
 
+
     Mark[][] getField() {
-        return field;
+        return field.clone();
     }
 }
