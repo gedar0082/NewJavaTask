@@ -1,3 +1,5 @@
+//когда происходит выход за границы массива, комп сам бросает ArrayIndexOutOfBoundsException, поэтому я в exception
+//бросаю ту же ошибку
 public class TicTacToe {
     private int size;
     enum Mark {
@@ -33,7 +35,7 @@ public class TicTacToe {
 
         //проверка на выход за границы массива
         if ((pointXX < 0 || pointXX > size - 1) && ((pointXY < 0 || pointXY > size - 1))){
-            throw new IndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException();
         }
         //удаление марки
         field[pointXX][pointXY] = null;
