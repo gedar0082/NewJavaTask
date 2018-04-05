@@ -16,7 +16,7 @@ public class TicTacToe {
 
         //проверка на выход за границы массива
         if ((pointXX < 0 || pointXX > size - 1) && ((pointXY < 0 || pointXY > size - 1))){
-            throw new ArrayIndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException();
         }
 
         //проверка на пустоту клетки
@@ -35,20 +35,20 @@ public class TicTacToe {
 
         //проверка на выход за границы массива
         if ((pointXX < 0 || pointXX > size - 1) && ((pointXY < 0 || pointXY > size - 1))){
-            throw new ArrayIndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException();
         }
         //удаление марки
         field[pointXX][pointXY] = null;
     }
 
     //самая длинная горизонтальная
-    private int longestHorizontal(){
+    private int longestHorizontal(Mark mark){
 
         int longestH2 = 0;
         for(int row = 0; row < size; row++) {
             int longestH = 0;
             for (int column = 0; column < size - 1; column++) {
-                if (field[row][column] == field[row][column + 1] && field[row][column] != null) {
+                if (field[row][column] == field[row][column + 1] && field[row][column] == mark) {
                     longestH++;
                 }
                 else{
@@ -62,12 +62,12 @@ public class TicTacToe {
     }
 
     //самая длинная вертикальная
-    private int longestVertical() {
+    private int longestVertical(Mark mark) {
         int longestV2 = 0;
         for (int column = 0; column < size; column++) {
             int longestV = 0;
             for (int row = 0; row < size - 1; row++) {
-                if (field[row][column] == field[row + 1][column] && field[row][column] != null) {
+                if (field[row][column] == field[row + 1][column] && field[row][column] == mark) {
                     longestV++;
                 }
             }
@@ -78,12 +78,12 @@ public class TicTacToe {
     }
 
     //самая длинная на главной диагонали
-    private int longestMainDiagonal() {
+    private int longestMainDiagonal(Mark mark) {
         int longestMD = 0;
         int column;
         for (int row = 0; row < size - 1; row++) {
             column = row;
-            if (field[row][column] == field[row + 1][column + 1] && field[row][column] != null) {
+            if (field[row][column] == field[row + 1][column + 1] && field[row][column] == mark) {
                 longestMD++;
             }
         }
@@ -92,12 +92,12 @@ public class TicTacToe {
     }
 
     //самая длинная на побочной диагонали
-    private int longestSecondaryDiagonal(){
+    private int longestSecondaryDiagonal(Mark mark){
         int longestSD = 0;
         int row;
         for (int column = 0; column < size - 1; column++) {
             row = size - column - 1;
-            if (field[row][column] == field[row - 1][column + 1] && field[row][column] != null) {
+            if (field[row][column] == field[row - 1][column + 1] && field[row][column] == mark) {
                 longestSD++;
             }
 
@@ -106,15 +106,16 @@ public class TicTacToe {
         return longestSD;
     }
 
-    public int getLongest(){
-        return Math.max(Math.max(Math.max(longestMainDiagonal(),
-                longestSecondaryDiagonal()),
-                longestVertical()),
-                longestHorizontal());
+    public int getLongest(Mark mark){
+        return Math.max(Math.max(Math.max(longestMainDiagonal(mark),
+                longestSecondaryDiagonal(mark)),
+                longestVertical(mark)),
+                longestHorizontal(mark));
     }
 
 
-    Mark[][] getField() {
-        return field.clone();
+    Mark getPoint(int pointX,int pointY) {
+        Mark point = field[pointX][pointY];
+        return point;
     }
 }
