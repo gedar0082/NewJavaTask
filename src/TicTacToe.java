@@ -12,7 +12,7 @@ public class TicTacToe {
 
     }
 
-    public void addMark(int pointXX,  int pointXY, Mark mark){
+    public boolean addMark(int pointXX,  int pointXY, Mark mark){
 
         //проверка на выход за границы массива
         if ((pointXX < 0 || pointXX > size - 1) && ((pointXY < 0 || pointXY > size - 1))){
@@ -22,16 +22,14 @@ public class TicTacToe {
         //проверка на пустоту клетки
         if(field[pointXX][pointXY] != null){
             mark = null;
+            return false;
         }
-
-        //добавление марки
-        if(mark != null){
             field[pointXX][pointXY] = mark;
-        }
+            return true;
     }
 
     //удаление марки
-    public void removeMark(int pointXX, int pointXY){
+    public boolean removeMark(int pointXX, int pointXY){
 
         //проверка на выход за границы массива
         if ((pointXX < 0 || pointXX > size - 1) && ((pointXY < 0 || pointXY > size - 1))){
@@ -39,6 +37,7 @@ public class TicTacToe {
         }
         //удаление марки
         field[pointXX][pointXY] = null;
+        return true;
     }
 
     //самая длинная горизонтальная
